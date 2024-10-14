@@ -13,7 +13,9 @@ int Account::getID() const {
 }
 
 Account::Account(const int id, std::string  ownerName,std::string cardNumber, const double initialBalance)
-        : accountID(id), owner(std::move(ownerName)),cardNumber(std::move(cardNumber)), balance(initialBalance) {}
+        : accountID(id), owner(std::move(ownerName)),cardNumber(std::move(cardNumber)), balance(initialBalance) {
+
+}
 
 Account::~Account() = default;
 
@@ -23,13 +25,11 @@ void Account::showAccount() const {
     std::cout << "Balance: " << balance << std::endl;
 }
 
-// Deposit function
 void Account::deposit(const double amount) {
     if (amount <= 0) throw std::invalid_argument("Deposit amount must be positive.");
     balance += amount;
 }
 
-// Withdraw function
 void Account::withdraw(const double amount) {
     if (amount <= 0)
         throw std::invalid_argument("Withdraw amount must be positive.");
@@ -38,18 +38,15 @@ void Account::withdraw(const double amount) {
     balance -= amount;
 }
 
-// Transfer function
 void Account::transfer(Account &toAccount, const double amount) {
     withdraw(amount);
     toAccount.deposit(amount);
 }
 
-// Save account to file
 void Account::save(std::ofstream &outFile) const {
-    outFile << accountID << " " << owner << " " << balance << std::endl;
+    outFile << accountID << " " << owner << " " << cardNumber << " " << balance << std::endl;
 }
 
-// Load account from file
 Account* Account::load(std::ifstream &inFile) {
     int id;
     std::string owner;
@@ -65,7 +62,7 @@ int Account::getAccountID() const {
 
 SavingsAccount::SavingsAccount(const int id, const std::string &ownerName, const std::string &cardNumber, const double initialBalance, const double rate)
         : Account(id, ownerName,cardNumber, initialBalance), interestRate(rate) {}
-// Apply interest to balance
+
 void SavingsAccount::applyInterest() {
     balance += balance * interestRate;
 }
@@ -74,7 +71,6 @@ void SavingsAccount::showSavingsAccount() const {
     std::cout << accountID << " " << owner << " " << balance << " " << interestRate << std::endl;
 }
 
-// Override save to include interest rate
 void SavingsAccount::save(std::ofstream &outFile) const {
     outFile << accountID << " " << owner << " " << cardNumber << " " << balance << " " << interestRate << std::endl;
 }
